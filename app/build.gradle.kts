@@ -41,9 +41,10 @@ android {
 }
 
 dependencies {
-    implementation("androidx.navigation:navigation-compose:2.10.2")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.0-rc02")
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
+    // Versiones estables compatibles con compileSdk 36
+    implementation("androidx.navigation:navigation-compose:2.8.7")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.7")
     implementation(libs.androidx.compose.material3)
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     implementation(libs.androidx.core.ktx)
