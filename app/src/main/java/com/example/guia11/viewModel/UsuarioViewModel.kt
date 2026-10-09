@@ -1,13 +1,23 @@
 package com.example.guia11.viewModel
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.guia11.data.local.UsuarioDatabase
+import com.example.guia11.data.local.UsuarioEntity
 import com.example.guia11.model.UsuarioErrores
 import com.example.guia11.model.UsuarioUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
-class UsuarioViewModel : ViewModel() {
+// Agregar
+class UsuarioViewModel(app: Application) : AndroidViewModel(app) {
+
+    // Agregar
+    private val dao = UsuarioDatabase.getDatabase(app).usuarioDao()
 
     // Estado interno mutable
     private val _estado = MutableStateFlow(UsuarioUiState())
@@ -45,7 +55,7 @@ class UsuarioViewModel : ViewModel() {
         val estadoActual = estado.value
         val errores = UsuarioErrores(
             nombre = if (estadoActual.nombre.isBlank()) "Campo Obligatorio" else null,
-            correo = if (estadoActual.correo.contains("@")) "Correo invalido" else null,
+            correo = if (!estadoActual.correo.contains("@")) "Correo invalido" else null,
             clave = if (estadoActual.clave.length < 6) "Debe tener al menos 6 caracters" else null,
             direccion = if (estadoActual.direccion.isBlank()) "Campo obligatorio" else null
             )
@@ -60,5 +70,21 @@ class UsuarioViewModel : ViewModel() {
         _estado.update { it.copy(errores = errores) }
 
         return !hayErrores
+    }
+
+    // Guarda en Room
+    fun guardar(onListo: () -> Unit) {
+        val a = _estado.value
+        viewModelScope.launch {
+            dao.insertar(
+                UsuarioEntity(
+                    nombre = a.nombre,
+                    correo = a.correo,
+                    clave = a.clave,
+                    direccion = a.direccion
+                )
+            )
+            onListo()
+        }
     }
 }
