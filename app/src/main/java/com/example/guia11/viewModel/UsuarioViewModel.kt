@@ -1,6 +1,8 @@
-package com.example.guia11.ui.login
+package com.example.guia11.viewModel
 
 import androidx.lifecycle.ViewModel
+import com.example.guia11.model.UsuarioErrores
+import com.example.guia11.model.UsuarioUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -10,43 +12,43 @@ class UsuarioViewModel : ViewModel() {
     // Estado interno mutable
     private val _estado = MutableStateFlow(UsuarioUiState())
 
-    // Estado Expuesto para la UI
+    // Estado propuesto para la UI
     val estado: StateFlow<UsuarioUiState> = _estado
 
     // Actualiza el campo nombre y limpia su error
-    fun onNombreChange(valor: String){
+    fun onNombreChange(valor: String) {
         _estado.update { it.copy(nombre = valor, errores = it.errores.copy(nombre = null)) }
     }
 
     // Actualiza el campo correo
     fun onCorreoChange(valor: String) {
-        _estado.update { it.copy(correo = valor, errores= it.errores.copy(correo = null)) }
+        _estado.update { it.copy(correo = valor, errores = it.errores.copy(correo = null)) }
     }
 
     // Actualiza el campo clave
     fun onClaveChange(valor: String) {
-        _estado.update { it.copy(clave = valor, errores= it.errores.copy(clave = null)) }
+        _estado.update { it.copy(clave = valor, errores = it.errores.copy(clave = null)) }
     }
 
-    // Actualiza el campo dirrecion
+    // Actualiza el campo direccion
     fun onDireccionChange(valor: String) {
-        _estado.update { it.copy(direccion = valor, errores= it.errores.copy(direccion = null)) }
+        _estado.update { it.copy(direccion = valor, errores = it.errores.copy(direccion = null)) }
     }
 
-    // Actualiza checkbox de aceptacion
-    fun onAceptarTerminarChange(valor: Boolean) {
+    // Actualiza el checkbox de aceptacion
+    fun onAceptarTerminosChange(valor: Boolean) {
         _estado.update { it.copy(aceptaTerminos = valor) }
     }
 
     // Validacion global del formulario
     fun validarFormulario(): Boolean {
-        val estadoActual = _estado.value
+        val estadoActual = estado.value
         val errores = UsuarioErrores(
             nombre = if (estadoActual.nombre.isBlank()) "Campo Obligatorio" else null,
-            correo = if (!estadoActual.correo.contains("@")) "Correo invalido" else null,
-            clave = if (estadoActual.clave.length < 6) "Debe tener al menos 6 caracteres" else null,
-            direccion = if (estadoActual.direccion.isBlank()) "Campo Obligatorio" else null
-        )
+            correo = if (estadoActual.correo.contains("@")) "Correo invalido" else null,
+            clave = if (estadoActual.clave.length < 6) "Debe tener al menos 6 caracters" else null,
+            direccion = if (estadoActual.direccion.isBlank()) "Campo obligatorio" else null
+            )
 
         val hayErrores = listOfNotNull(
             errores.nombre,
@@ -59,5 +61,4 @@ class UsuarioViewModel : ViewModel() {
 
         return !hayErrores
     }
-
 }

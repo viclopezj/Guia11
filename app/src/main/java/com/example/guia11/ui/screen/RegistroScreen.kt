@@ -1,4 +1,4 @@
-package com.example.guia11.ui.home
+package com.example.guia11.ui.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,7 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.guia11.ui.login.UsuarioViewModel
+import com.example.guia11.viewModel.UsuarioViewModel
 
 @Composable
 fun RegistroScreen(
@@ -30,12 +30,13 @@ fun RegistroScreen(
 ) {
     val estado by viewModel.estado.collectAsState()
 
-    Column (
+    Column(
         Modifier
             .fillMaxSize()
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
-    ){
+    ) {
+
         // Campo nombre
         OutlinedTextField(
             value = estado.nombre,
@@ -94,20 +95,20 @@ fun RegistroScreen(
         )
 
         // Checkbox: aceptar terminos
-        Row (verticalAlignment = Alignment.CenterVertically) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Checkbox(
                 checked = estado.aceptaTerminos,
-                onCheckedChange = viewModel::onAceptarTerminarChange
+                onCheckedChange = viewModel::onAceptarTerminosChange
             )
             Spacer(Modifier.width(8.dp))
-            Text("Acepto los terminos y condiciones")
+            Text("Acepta los terminos y condiciones")
         }
 
         // Boton: enviar
         Button(
             onClick = {
                 if (viewModel.validarFormulario()){
-                    navController.navigate("Resumen")
+                    navController.navigate("resumen")
                 }
             },
             modifier = Modifier.fillMaxWidth()
